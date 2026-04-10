@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Site Laís Bembo</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <style>
+    :root {
+      --brand: #7c3aed;
+      --brand-light: #ede9fe;
+      --brand-dark: #5b21b6;
+    }
+
+    body {
+      background: #f5f3ff;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--brand-dark), var(--brand));
+      color: #fff;
+      padding: 2rem 1rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 18px rgba(124,58,237,0.18);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 0.25rem;
+    }
+
+    header p {
+      opacity: 0.82;
+      font-size: 0.97rem;
+      margin: 0;
+    }
+
+    .card-main {
+      border: none;
+      border-radius: 1.25rem;
+      box-shadow: 0 4px 32px rgba(124,58,237,0.10);
+    }
+
+    #webcam-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #1e1b4b;
+      border-radius: 1rem;
+      overflow: hidden;
+      min-height: 220px;
+      position: relative;
+    }
+
+    #webcam-wrapper canvas {
+      display: block;
+      max-width: 100%;
+      border-radius: 1rem;
+    }
+
+    #placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #a5b4fc;
+      padding: 2.5rem 1rem;
+      gap: 0.75rem;
+    }
+
+    #placeholder i {
+      font-size: 3.5rem;
+    }
+
+    #placeholder span {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    #btn-start {
+      background: linear-gradient(135deg, var(--brand-dark), var(--brand));
+      border: none;
+      border-radius: 2rem;
+      padding: 0.75rem 2.25rem;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: #fff;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+      box-shadow: 0 4px 14px rgba(124,58,237,0.30);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    #btn-start:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(124,58,237,0.38);
+      opacity: 0.95;
+    }
+
+    #btn-start:active {
+      transform: scale(0.97);
+    }
+
+    #btn-start:disabled {
+      opacity: 0.55;
+      transform: none;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .label-card {
+      background: #fff;
+      border-radius: 0.85rem;
+      padding: 0.85rem 1rem;
+      margin-bottom: 0.65rem;
+      border: 1.5px solid #ede9fe;
+      transition: border-color 0.2s;
+    }
+
+    .label-card.active-class {
+      border-color: var(--brand);
+      background: var(--brand-light);
+    }
+
+    .label-card .class-name {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #4c1d95;
+      margin-bottom: 0.35rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .label-card .class-name .pct {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--brand);
+    }
+
+    .progress {
+      height: 12px;
+      border-radius: 1rem;
+      background: #ede9fe;
+    }
+
+    .progress-bar {
+      background: linear-gradient(90deg, var(--brand-dark), var(--brand));
+      border-radius: 1rem;
+      transition: width 0.25s ease;
+    }
+
+    #status-badge {
+      font-size: 0.78rem;
+      border-radius: 2rem;
+      padding: 0.3rem 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #9ca3af;
+      padding: 1.5rem 0 1rem;
+    }
+
+    @media (max-width: 576px) {
+      header h1 { font-size: 1.4rem; }
+      #btn-start { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1><i class="bi bi-camera-video-fill me-2"></i>Laís Bembo</h1>
+    <p>Classificação de Imagem com IA · Teachable Machine</p>
+  </header>
+
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8">
+
+        <div class="card card-main p-3 p-md-4 mb-4">
+          <div id="webcam-wrapper" class="mb-3">
+            <div id="placeholder">
+              <i class="bi bi-camera-video"></i>
+              <span>Clique em "Iniciar Câmera" para começar</span>
+            </div>
+            <div id="webcam-container"></div>
+          </div>
+
+          <div class="d-flex flex-column flex-sm-row align-items-center gap-3 justify-content-between">
+            <button id="btn-start" onclick="init()">
+              <i class="bi bi-play-circle-fill"></i> Iniciar Câmera
+            </button>
+            <span id="status-badge" class="badge bg-secondary">Aguardando</span>
+          </div>
+        </div>
+
+        <div class="card card-main p-3 p-md-4">
+          <h6 class="fw-bold mb-3" style="color:#4c1d95;">
+            <i class="bi bi-bar-chart-fill me-1"></i> Resultados da Classificação
+          </h6>
+          <div id="label-container">
+            <div class="text-center text-muted py-3" style="font-size:0.88rem;">
+              <i class="bi bi-hourglass me-1"></i>Nenhuma predição ainda...
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Laís Bembo · Powered by Teachable Machine &amp; TensorFlow.js
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const URL = "https://teachablemachine.withgoogle.com/models/-RISl2rTa/";
+    let model, webcam, labelContainer, maxPredictions;
+
+    async function init() {
+      const btn = document.getElementById('btn-start');
+      const badge = document.getElementById('status-badge');
+      const placeholder = document.getElementById('placeholder');
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Carregando modelo...';
+      badge.className = 'badge bg-warning text-dark';
+      badge.textContent = 'Carregando...';
+
+      try {
+        const modelURL = URL + "model.json";
+        const metadataURL = URL + "metadata.json";
+
+        model = await tmImage.load(modelURL, metadataURL);
+        maxPredictions = model.getTotalClasses();
+
+        const flip = true;
+        webcam = new tmImage.Webcam(320, 320, flip);
+        await webcam.setup();
+        await webcam.play();
+
+        placeholder.style.display = 'none';
+        document.getElementById("webcam-container").appendChild(webcam.canvas);
+
+        badge.className = 'badge bg-success';
+        badge.textContent = 'Câmera Ativa';
+        btn.innerHTML = '<i class="bi bi-camera-video-fill me-1"></i> Câmera Ativa';
+
+        labelContainer = document.getElementById("label-container");
+        labelContainer.innerHTML = '';
+
+        for (let i = 0; i < maxPredictions; i++) {
+          const card = document.createElement("div");
+          card.className = "label-card";
+          card.innerHTML = `
+            <div class="class-name">
+              <span class="cls-name">Classe ${i + 1}</span>
+              <span class="pct">0%</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width:0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          `;
+          labelContainer.appendChild(card);
+        }
+
+        window.requestAnimationFrame(loop);
+      } catch (err) {
+        badge.className = 'badge bg-danger';
+        badge.textContent = 'Erro';
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-1"></i> Tentar Novamente';
+        console.error(err);
+      }
+    }
+
+    async function loop() {
+      webcam.update();
+      await predict();
+      window.requestAnimationFrame(loop);
+    }
+
+    async function predict() {
+      const prediction = await model.predict(webcam.canvas);
+      const cards = labelContainer.querySelectorAll('.label-card');
+
+      let maxIdx = 0;
+      let maxProb = 0;
+      prediction.forEach((p, i) => {
+        if (p.probability > maxProb) { maxProb = p.probability; maxIdx = i; }
+      });
+
+      prediction.forEach((p, i) => {
+        const card = cards[i];
+        const pct = Math.round(p.probability * 100);
+        card.querySelector('.cls-name').textContent = p.className;
+        card.querySelector('.pct').textContent = pct + '%';
+        const bar = card.querySelector('.progress-bar');
+        bar.style.width = pct + '%';
+        bar.setAttribute('aria-valuenow', pct);
+        card.classList.toggle('active-class', i === maxIdx);
+      });
+    }
+  </script>
+
+</body>
+</html>
