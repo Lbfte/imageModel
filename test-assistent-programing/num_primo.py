@@ -1,17 +1,25 @@
-def eh_primo(n: int) -> bool:
-    """
-    Verifica se um número é primo.
+import sys
 
-    Um número primo é um inteiro maior que 1 que possui apenas dois divisores positivos: 1 e ele mesmo.
+def eh_primo(n: int) -> bool:
+    """Verifica se um número inteiro é primo.
+
+    Um número primo é definido como um número inteiro maior que 1 que possui 
+    exatamente dois divisores positivos distintos: 1 e ele mesmo. Esta função 
+    utiliza uma otimização baseada no teste de divisibilidade 6k ± 1 para 
+    aumentar a eficiência em números grandes.
 
     Args:
-        n (int): O número a ser verificado.
+        n (int): O número inteiro a ser verificado.
 
     Returns:
-        bool: True se n for primo, False caso contrário.
+        bool: True se o número for primo, False caso contrário (incluindo 
+            números menores que 2 ou entradas de tipos diferentes de int).
 
-    Raises:
-        Nenhum, mas retorna False para entradas não inteiras ou inválidas.
+    Examples:
+        >>> eh_primo(7)
+        True
+        >>> eh_primo(10)
+        False
     """
     # Verifica se a entrada é um inteiro
     if not isinstance(n, int):
@@ -25,7 +33,7 @@ def eh_primo(n: int) -> bool:
     if n <= 3:
         return True
 
-    # Elimina múltiplos de 2 e 3
+    # Elimina múltiplos de 2 e 3 rapidamente
     if n % 2 == 0 or n % 3 == 0:
         return False
 
@@ -58,20 +66,24 @@ TEST_NUMBERS = [
 ]
 
 if __name__ == "__main__":
-    # Executa testes automáticos se houver argumentos de linha de comando
-    import sys
+    # Se houver argumentos na linha de comando, executa a bateria de testes
     if len(sys.argv) > 1:
-        print("Testando a função eh_primo com lista pré-definida:")
+        print("Executando testes automáticos:")
+        print("-" * 30)
         for numero in TEST_NUMBERS:
             resultado = eh_primo(numero)
-            status = "primo" if resultado else "não primo"
-            print(f"{numero}: {status}")
+            status = "PRIMO" if resultado else "não primo"
+            print(f"{numero:>4}: {status}")
     else:
-        # Modo interativo: solicita entrada do usuário
+        # Modo interativo padrão
         try:
-            numero = int(input("Digite um número inteiro para verificar se é primo: "))
-            resultado = eh_primo(numero)
-            status = "primo" if resultado else "não primo"
-            print(f"O número {numero} é {status}.")
+            entrada = input("Digite um número inteiro para verificar se é primo: ")
+            numero_usuario = int(entrada)
+            
+            if eh_primo(numero_usuario):
+                print(f"✨ O número {numero_usuario} é PRIMO.")
+            else:
+                print(f"❌ O número {numero_usuario} NÃO é primo.")
+                
         except ValueError:
-            print("Erro: Por favor, digite um número inteiro válido.")
+            print("Erro: Por favor, digite apenas números inteiros válidos.")
